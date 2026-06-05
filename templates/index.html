@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=triage-ui-2">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="#inicio" aria-label="TRIAX inicio">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#tecnologias">Tecnologías</a></li>
+                <li><a href="#nosotros">Sobre nosotros</a></li>
+                <li><a href="{{ url_for('politica_datos') }}">Politica de datos</a></li>
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('logout') }}">Cerrar sesion</a></li>
+                {% else %}
+                <li><a href="{{ url_for('registro') }}">Registro</a></li>
+                <li><a href="{{ url_for('login') }}">Iniciar sesion</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('mostrar_modelo') }}" class="btn-nav">Explorar modelo</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="inicio" class="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <span class="eyebrow">Triage inteligente para urgencias</span>
+                    <h1>Bienvenido a <span class="text-gradient">TRIAX</span></h1>
+                    <p>
+                        Un sistema de apoyo clínico basado en Inteligencia Artificial para optimizar la
+                        recepción hospitalaria, reducir tiempos de respuesta y fortalecer la priorización
+                        de pacientes en servicios de urgencias.
+                    </p>
+                    <div class="hero-btns">
+                        <a href="{{ url_for('mostrar_modelo') }}" class="btn-primary">Explorar modelo</a>
+                        <a href="#tecnologias" class="btn-secondary">Ver tecnologías</a>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                  
+                   
+                  
+                </div>
+            </div>
+        </section>
+
+        <section id="tecnologias" class="infra-section">
+            <div class="container">
+                <span class="section-kicker">Arquitectura</span>
+                <h2><span class="text-gradient">Tecnologías</span></h2>
+                <p class="subtitulo">Capas principales que conectan la experiencia del usuario con el modelo de IA.</p>
+
+                <div class="architecture-diagram">
+                    <article class="tech-item">
+                        <div class="icon">HTML</div>
+                        <div class="tooltip">
+                            <h3>Frontend</h3>
+                            <p>HTML5 estructura la interfaz y CSS3 define una experiencia clara, adaptable y visualmente coherente.</p>
+                        </div>
+                    </article>
+
+                    <div class="data-flow-arrow" aria-hidden="true">→</div>
+
+                    <article class="tech-item">
+                        <div class="icon">PY</div>
+                        <div class="tooltip">
+                            <h3>Flask</h3>
+                            <p>Coordina las peticiones, conecta la interfaz con el modelo de IA y organiza la lógica del sistema.</p>
+                        </div>
+                    </article>
+
+                    <div class="data-flow-arrow" aria-hidden="true">→</div>
+
+                    <article class="tech-item">
+                        <div class="icon">API</div>
+                        <div class="tooltip">
+                            <h3>Gemini API</h3>
+                            <p>Procesa los datos clínicos ingresados y devuelve una clasificación de apoyo en formato JSON.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="nosotros" class="mision">
+            <div class="container">
+                <span class="section-kicker">Identidad</span>
+                <h2><span class="text-gradient">Sobre nosotros</span></h2>
+                <div class="art-mision">
+                    <article class="articulo">
+                        <h3>Misión</h3>
+                        <p>Nuestra misión es proveer a los profesionales de la salud una herramienta de soporte basada en IA para estandarizar decisiones clínicas, disminuir la carga laboral y mejorar la seguridad del paciente.</p>
+                    </article>
+
+                    <article class="articulo">
+                        <h3>Visión</h3>
+                        <p>Consolidarnos como un referente digital de triage, integrando criterio humano y precisión algorítmica para reducir errores de priorización clínica.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="identity">
+            <div class="container">
+                <span class="section-kicker">Ruta del proyecto</span>
+                <h2><span class="text-gradient">Objetivos</span></h2>
+                <div class="cards-container">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <article class="articulo">
+                                    <h3>Objetivo general</h3>
+                                    <p>Desarrollar un modelo de Inteligencia Artificial para optimizar el triage de urgencias mediante procesamiento de datos clínicos y algoritmos de clasificación.</p>
+                                </article>
+                            </div>
+                            <div class="flip-card-back">
+                                <article class="articulo">
+                                    <h3>Objetivos específicos</h3>
+                                    <p>Analizar protocolos médicos de triage y datos necesarios para estructurar la base de conocimiento.</p>
+                                    <p>Diseñar el algoritmo de IA con técnicas de aprendizaje automático.</p>
+                                    <p>Desarrollar una interfaz funcional para capturar datos clínicos y visualizar resultados.</p>
+                                    <p>Implementar el modelo en un entorno de prueba.</p>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="infra-section">
+            <div class="container">
+                <span class="section-kicker">Sistema visual</span>
+                <h2><span class="text-gradient">Tipografía</span></h2>
+                <div class="typography-showcase">
+                    <p class="intro-text">Familias tipográficas pensadas para una lectura limpia en interfaces clínicas.</p>
+                    <div class="font-item segoe">
+                        <span class="font-name">Segoe UI</span>
+                        <span class="font-preview">Hola, soy Segoe UI</span>
+                    </div>
+                    <div class="font-item tahoma">
+                        <span class="font-name">Tahoma</span>
+                        <span class="font-preview">Hola, soy Tahoma</span>
+                    </div>
+                    <div class="font-item geneva">
+                        <span class="font-name">Geneva</span>
+                        <span class="font-preview">Hola, soy Geneva</span>
+                    </div>
+                    <div class="font-item verdana">
+                        <span class="font-name">Verdana</span>
+                        <span class="font-preview">Hola, soy Verdana</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="infra-section colors-section">
+            <div class="container">
+                <span class="section-kicker">Paleta</span>
+                <h2><span class="text-gradient">Colores</span></h2>
+                <div class="color-grid">
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: #f8fbfc;"></div>
+                        <p class="color-hex">#f8fbfc</p>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: #0ea5e9;"></div>
+                        <p class="color-hex">#0ea5e9</p>
+                    </div>
+                    <div class="color-card">
+                        <div class="color-swatch" style="background-color: #22c55e;"></div>
+                        <p class="color-hex">#22c55e</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section about">
+                <h2 class="text-gradient">TRIAX</h2>
+                <p>Optimizando la atención hospitalaria mediante Inteligencia Artificial avanzada.</p>
+                <div class="system-status">
+                    <span class="status-dot"></span> Sistema operativo
+                </div>
+            </div>
+
+            <div class="footer-section links">
+                <h3>Navegación</h3>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#nosotros">Sobre nosotros</a></li>
+                    <li><a href="#tecnologias">Tecnologías</a></li>
+                    <li><a href="{{ url_for('politica_datos') }}">Politica de datos</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section contact">
+                <h3>Desarrollo</h3>
+                <p>Espinal, Tolima</p>
+                <p>Ingeniería de Sistemas VII</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 TRIAX | Erika Dayan Guerrero Otavo</p>
+        </div>
+    </footer>
+</body>
+</html>

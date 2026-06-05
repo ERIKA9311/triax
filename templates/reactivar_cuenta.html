@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Reactivar cuenta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=seguridad-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('login') }}">Volver al login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-panel">
+            <span class="eyebrow">Reactivacion segura</span>
+            <h1>Reactivar <span class="text-gradient">cuenta</span></h1>
+
+            {% include "partials/mensajes.html" %}
+
+            {% if paso == 'otp' %}
+                <form method="POST" action="{{ url_for('reactivar_cuenta', paso='otp') }}" class="auth-form">
+                    <label>
+                        Codigo OTP
+                        <input type="text" name="codigo_otp" maxlength="6" autocomplete="one-time-code" required>
+                    </label>
+                    <button type="submit" class="btn-primary">Reactivar cuenta</button>
+                </form>
+            {% else %}
+                <form method="POST" class="auth-form">
+                    <label>
+                        Usuario o correo electronico
+                        <input type="text" name="identificador" autocomplete="username" required>
+                    </label>
+                    <label>
+                        Contrasena
+                        <input type="password" name="password" autocomplete="current-password" required>
+                    </label>
+                    <button type="submit" class="btn-primary">Enviar OTP</button>
+                </form>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

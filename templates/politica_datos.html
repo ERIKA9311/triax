@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Politica de Tratamiento de Datos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=seguridad-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Inicio</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('mostrar_modelo') }}" class="btn-nav">Modelo</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('registro') }}" class="btn-nav">Registro</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <section class="container profile-shell legal-page">
+            <div class="profile-heading">
+                <span class="eyebrow">Privacidad TRIAX IA</span>
+                <h1>Politica de <span class="text-gradient">Tratamiento de Datos</span></h1>
+                <p class="subtitulo">
+                    Esta politica explica como TRIAX IA recolecta, usa, protege y gestiona los datos personales
+                    y la informacion clinica ingresada por los usuarios.
+                </p>
+            </div>
+
+            <article class="profile-card legal-card">
+                <h2>Recoleccion de datos</h2>
+                <p>TRIAX IA recolecta datos de identificacion y contacto, como nombre, usuario, correo electronico y credenciales de acceso. Tambien puede registrar datos tecnicos necesarios para la seguridad, como direccion IP, navegador, fecha de registro, ultimo acceso y eventos de actividad.</p>
+
+                <h2>Uso de informacion clinica</h2>
+                <p>La informacion clinica ingresada se utiliza exclusivamente para apoyar la clasificacion y priorizacion de triage. TRIAX IA no reemplaza el criterio medico ni constituye diagnostico definitivo. Los datos clinicos no deben usarse para fines ajenos al servicio sin autorizacion previa del titular.</p>
+
+                <h2>Proteccion de datos</h2>
+                <p>El sistema aplica medidas de seguridad como contrasenas cifradas, OTP por correo, codigos de recuperacion, archivo seguro de acceso y registro de actividad. El acceso a la informacion se limita a las finalidades propias del sistema y a usuarios autorizados.</p>
+
+                <h2>Derechos del usuario y Habeas Data</h2>
+                <p>En cumplimiento de la Ley 1581 de 2012 de Colombia y el derecho constitucional de Habeas Data, el usuario puede conocer, actualizar, rectificar, solicitar prueba de autorizacion, revocar el consentimiento, pedir la eliminacion de sus datos cuando proceda y presentar consultas o reclamos sobre el tratamiento de su informacion personal.</p>
+
+                <h2>Eliminacion de datos</h2>
+                <p>El usuario puede solicitar la eliminacion definitiva de su cuenta desde el centro de seguridad. La desactivacion de cuenta bloquea el acceso, pero conserva la informacion clinica asociada para continuidad, trazabilidad o deberes legales aplicables. La eliminacion definitiva remueve la cuenta y sus mecanismos de autenticacion asociados.</p>
+
+                <h2>Revocacion de consentimiento</h2>
+                <p>El consentimiento para el tratamiento de datos puede revocarse cuando no exista una obligacion legal o contractual que exija conservar la informacion. La revocacion puede implicar la imposibilidad de seguir usando servicios que dependen de esos datos.</p>
+
+                <h2>Cumplimiento normativo</h2>
+                <p>TRIAX IA orienta su tratamiento de datos personales conforme a la Ley 1581 de 2012, sus decretos reglamentarios y los principios de legalidad, finalidad, libertad, veracidad, transparencia, acceso restringido, seguridad y confidencialidad.</p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>

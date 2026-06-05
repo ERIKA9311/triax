@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Análisis de Triage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=triage-obstetric-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('perfil') }}">{{ current_user.nombre }}</a></li>
+                <li><a href="{{ url_for('perfil', tab='seguridad') }}">Perfil</a></li>
+                <li><a href="{{ url_for('home') }}">Volver al inicio</a></li>
+                <li><a href="{{ url_for('logout') }}" class="btn-nav">Cerrar sesion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="model-hero">
+            <div class="container model-grid">
+                <div>
+                    <span class="eyebrow">Sistema de Apoyo Clínico</span>
+                    <h1>Análisis de <span class="text-gradient">Triage Inteligente</span></h1>
+                    <p class="subtitulo">Clasificación en tiempo real basada en el Resolución 5596 de 2015 y constantes vitales.</p>
+                </div>
+
+                <div id="contenedor-ia" class="respuesta-box">
+                    <p class="loading">Esperando ingreso de datos del paciente...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="formulario-triage" class="sim-section">
+            <div class="container">
+                <span class="section-kicker">Entrada de Datos</span>
+                <h2><span class="text-gradient">Registro de Signos y Síntomas</span></h2>
+
+                <form id="triageForm" class="triage-form-grid">
+                    <div class="form-group">
+                        <h3>Signos Vitales</h3>
+                        <div class="input-container">
+                            <input type="number" name="edad" placeholder="Edad" required>
+                            <input type="number" step="0.1" name="temperatura" placeholder="Temperatura (°C)" required>
+                            <input type="number" name="saturacion" placeholder="Saturación (SpO2 %)" required>
+                            <input type="text" name="presion_arterial" placeholder="Presión arterial (Ej: 120/80)" required>
+                            <input type="number" name="frecuencia_cardiaca" placeholder="Frecuencia cardíaca (lpm)" required>
+                            <input type="number" name="dolor" min="1" max="10" placeholder="Nivel de dolor (1-10)" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <h3>Síntomas y Alertas</h3>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox" name="sintomas" value="Dolor en pecho"><span>Dolor en pecho</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Dificultad respiratoria"><span>Dificultad respiratoria</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Mareo"><span>Mareo</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Fiebre"><span>Fiebre</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Sangrado"><span>Sangrado</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Convulsiones"><span>Convulsiones</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Dolor abdominal"><span>Dolor abdominal</span></label>
+                            <label><input type="checkbox" name="sintomas" value="Pérdida de conciencia"><span>Pérdida de conciencia</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <h3>Antecedentes Médicos</h3>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox" name="antecedentes" value="Diabetes"><span>Diabetes</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="Hipertensión"><span>Hipertensión</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="Cardiopatía"><span>Cardiopatía</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="Asma"><span>Asma</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="EPOC"><span>EPOC</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="Enfermedad renal"><span>Enfermedad renal</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="Epilepsia"><span>Epilepsia</span></label>
+                            <label><input type="checkbox" name="antecedentes" value="Cáncer"><span>Cáncer</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <h3>Medicamentos de Riesgo</h3>
+                        <div class="checkbox-grid">
+                            <label><input type="checkbox" name="medicamentos_riesgo" value="Anticoagulantes"><span>Anticoagulantes</span></label>
+                            <label><input type="checkbox" name="medicamentos_riesgo" value="Insulina"><span>Insulina</span></label>
+                            <label><input type="checkbox" name="medicamentos_riesgo" value="Anticonvulsivos"><span>Anticonvulsivos</span></label>
+                            <label><input type="checkbox" name="medicamentos_riesgo" value="Corticoides"><span>Corticoides</span></label>
+                            <label><input type="checkbox" name="medicamentos_riesgo" value="Quimioterapia"><span>Quimioterapia</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width obstetric-question">
+                        <h3>Informacion Obstétrica</h3>
+                        <p class="form-help">¿La paciente está embarazada?</p>
+                        <div class="radio-grid">
+                            <label><input type="radio" name="embarazada" value="si"><span>Sí</span></label>
+                            <label><input type="radio" name="embarazada" value="no" checked><span>No</span></label>
+                        </div>
+                    </div>
+
+                    <div id="seccionObstetrica" class="form-group full-width obstetric-section hidden">
+                        <h3>Información Obstétrica</h3>
+                        <div class="input-container obstetric-fields">
+                            <input type="number" name="semanas_gestacion" min="1" max="42" placeholder="Semanas de gestación">
+                            <select name="movimiento_fetal">
+                                <option value="">Movimiento fetal</option>
+                                <option value="Normal">Normal</option>
+                                <option value="Disminuido">Disminuido</option>
+                                <option value="Ausente">Ausente</option>
+                            </select>
+                        </div>
+
+                        <div class="checkbox-grid obstetric-symptoms">
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Sangrado vaginal"><span>Sangrado vaginal</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Contracciones"><span>Contracciones</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Pérdida de líquido amniótico"><span>Pérdida de líquido amniótico</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Dolor abdominal intenso"><span>Dolor abdominal intenso</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Dolor de cabeza severo"><span>Dolor de cabeza severo</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Visión borrosa"><span>Visión borrosa</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Convulsiones"><span>Convulsiones</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Hinchazón severa"><span>Hinchazón severa</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Disminución de movimientos fetales"><span>Disminución de movimientos fetales</span></label>
+                            <label><input type="checkbox" name="sintomas_obstetricos" value="Dificultad respiratoria"><span>Dificultad respiratoria</span></label>
+                        </div>
+                    </div>
+
+                    <div class="full-width form-actions">
+                        <button type="button" id="btnNuevoIngreso" class="btn-secondary">Ingresar nuevos datos</button>
+                        <button type="submit" class="btn-primary">Ejecutar Análisis con TRIAX AI</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=triage-obstetric-1"></script>
+</body>
+</html>

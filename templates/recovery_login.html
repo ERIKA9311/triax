@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Codigo de recuperacion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=recovery-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('login') }}">Volver al login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-panel">
+            <span class="eyebrow">Acceso alternativo</span>
+            <h1>Codigo de <span class="text-gradient">recuperacion</span></h1>
+
+            {% include "partials/mensajes.html" %}
+
+            <form method="POST" class="auth-form">
+                <label>
+                    Usuario
+                    <input type="text" name="usuario" autocomplete="username" required>
+                </label>
+                <label>
+                    Contrasena
+                    <input type="password" name="password" autocomplete="current-password" required>
+                </label>
+                <label>
+                    Codigo de recuperacion
+                    <input
+                        type="text"
+                        name="codigo_recuperacion"
+                        placeholder="XXXX-XXXX-XXXX"
+                        autocomplete="one-time-code"
+                        required
+                    >
+                </label>
+                <button type="submit" class="btn-primary">Entrar con codigo</button>
+            </form>
+
+            <p class="auth-switch">Ya puedes recibir correos? <a href="{{ url_for('login') }}">Usa OTP</a></p>
+        </section>
+    </main>
+</body>
+</html>

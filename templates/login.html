@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Inicio de sesion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=perfil-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Inicio</a></li>
+                <li><a href="{{ url_for('registro') }}" class="btn-nav">Registro</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-panel">
+            <span class="eyebrow">Verificacion segura</span>
+            <h1>Iniciar <span class="text-gradient">sesion</span></h1>
+
+            {% include "partials/mensajes.html" %}
+
+            <div class="auth-method-tabs" role="tablist" aria-label="Metodos de inicio de sesion">
+                <button type="button" class="auth-method-tab active" data-login-method="otp">OTP</button>
+                <button type="button" class="auth-method-tab" data-login-method="recovery">Recovery code</button>
+                <button type="button" class="auth-method-tab" data-login-method="trxkey">.trxkey</button>
+            </div>
+
+            <form method="POST" class="auth-form" enctype="multipart/form-data">
+                <input type="hidden" name="metodo" id="loginMetodo" value="otp">
+                <label>
+                    Usuario
+                    <input type="text" name="usuario" autocomplete="username" required>
+                </label>
+                <label>
+                    Contrasena
+                    <input type="password" name="password" autocomplete="current-password" required>
+                </label>
+
+                <div class="login-method-panel active" data-login-panel="otp">
+                    <p class="auth-note compact">Recibiras un codigo de un solo uso en tu correo registrado.</p>
+                </div>
+
+                <div class="login-method-panel" data-login-panel="recovery">
+                    <label>
+                        Codigo de recuperacion
+                        <input
+                            type="text"
+                            name="codigo_recuperacion"
+                            placeholder="XXXX-XXXX-XXXX"
+                            autocomplete="one-time-code"
+                        >
+                    </label>
+                </div>
+
+                <div class="login-method-panel" data-login-panel="trxkey">
+                    <label>
+                        Archivo de identidad TRIAX
+                        <input type="file" name="trxkey" accept=".trxkey">
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-primary" id="loginSubmit">Enviar codigo OTP</button>
+            </form>
+
+            <p class="auth-switch">No tienes cuenta? <a href="{{ url_for('registro') }}">Registrate</a></p>
+            <p class="auth-switch compact">Olvidaste tu contrasena? <a href="{{ url_for('olvide_password') }}">Restablecela</a></p>
+            <p class="auth-switch compact">Cuenta desactivada? <a href="{{ url_for('reactivar_cuenta') }}">Reactivala</a></p>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='script.js') }}?v=perfil-1"></script>
+</body>
+</html>

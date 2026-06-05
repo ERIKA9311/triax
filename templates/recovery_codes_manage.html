@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Administrar codigos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=recovery-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('mostrar_modelo') }}">Volver al modelo</a></li>
+                <li><a href="{{ url_for('logout') }}" class="btn-nav">Cerrar sesion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-panel">
+            <span class="eyebrow">Seguridad de cuenta</span>
+            <h1>Recovery <span class="text-gradient">Codes</span></h1>
+
+            {% include "partials/mensajes.html" %}
+
+            <div class="recovery-status">
+                <p><strong>{{ codigos_disponibles }}</strong> codigos disponibles</p>
+                <p><strong>{{ codigos_usados }}</strong> codigos usados</p>
+            </div>
+
+            <form method="POST" class="auth-form">
+                <button type="submit" class="btn-primary">Regenerar 10 codigos</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

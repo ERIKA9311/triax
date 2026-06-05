@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=auth-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') }}">Inicio</a></li>
+                <li><a href="{{ url_for('login') }}" class="btn-nav">Iniciar sesion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-panel">
+            <span class="eyebrow">Acceso seguro</span>
+            <h1>Crear cuenta <span class="text-gradient">TRIAX</span></h1>
+
+            {% include "partials/mensajes.html" %}
+
+            <form method="POST" class="auth-form">
+                <label>
+                    Nombre completo
+                    <input type="text" name="nombre" autocomplete="name" required>
+                </label>
+                <label>
+                    Usuario
+                    <input type="text" name="usuario" autocomplete="username" required>
+                </label>
+                <label>
+                    Correo electronico
+                    <input type="email" name="correo" autocomplete="email" required>
+                </label>
+                <label>
+                    Contrasena
+                    <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+                </label>
+                <label>
+                    Confirmar contrasena
+                    <input type="password" name="confirmar_password" autocomplete="new-password" minlength="8" required>
+                </label>
+                <label class="policy-check">
+                    <input type="checkbox" name="acepto_politica" required>
+                    <span>
+                        He leido y acepto la
+                        <a href="{{ url_for('politica_datos') }}" target="_blank" rel="noopener">
+                            Politica de Tratamiento de Datos
+                        </a>
+                    </span>
+                </label>
+                <button type="submit" class="btn-primary">Registrarme</button>
+            </form>
+
+            <p class="auth-switch">Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesion</a></p>
+        </section>
+    </main>
+</body>
+</html>

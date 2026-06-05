@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Codigos de recuperacion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=recovery-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('mostrar_modelo') }}">Volver al modelo</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Iniciar sesion</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-panel recovery-panel">
+            <span class="eyebrow">Guardalos ahora</span>
+            <h1>Codigos de <span class="text-gradient">recuperacion</span></h1>
+
+            {% include "partials/mensajes.html" %}
+
+            <p class="auth-note">
+                Estos codigos solo se muestran una vez. Cada codigo permite iniciar sesion una sola vez si no puedes acceder al correo del OTP.
+            </p>
+
+            <div class="recovery-code-grid" aria-label="Codigos de recuperacion">
+                {% for codigo in codigos %}
+                    <code>{{ codigo }}</code>
+                {% endfor %}
+            </div>
+
+            <div class="auth-actions">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('mostrar_modelo') }}" class="btn-primary">Continuar</a>
+                    <a href="{{ url_for('recovery_codes') }}" class="btn-secondary">Administrar codigos</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn-primary">Ir al login</a>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

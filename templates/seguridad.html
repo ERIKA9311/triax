@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Seguridad</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=seguridad-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('mostrar_modelo') }}">Modelo</a></li>
+                <li><a href="{{ url_for('perfil') }}">Perfil</a></li>
+                <li><a href="{{ url_for('logout') }}" class="btn-nav">Cerrar sesion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <section class="container profile-shell">
+            <div class="profile-heading">
+                <span class="eyebrow">Centro de seguridad</span>
+                <h1>Seguridad y <span class="text-gradient">privacidad</span></h1>
+                <p class="subtitulo">Revisa tus metodos de autenticacion y administra el estado de tu cuenta.</p>
+            </div>
+
+            {% include "partials/mensajes.html" %}
+
+            <div class="security-grid account-security-grid">
+                <article class="profile-card">
+                    <h2>Datos de la cuenta</h2>
+                    <div class="security-meta"><p>Usuario</p><strong>{{ current_user.usuario }}</strong></div>
+                    <div class="security-meta"><p>Correo</p><strong>{{ current_user.correo }}</strong></div>
+                    <div class="security-meta"><p>Fecha de registro</p><strong>{{ current_user.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}</strong></div>
+                    <div class="security-meta">
+                        <p>Ultimo acceso</p>
+                        <strong>{% if current_user.ultimo_acceso %}{{ current_user.ultimo_acceso.strftime('%Y-%m-%d %H:%M') }}{% else %}Sin accesos registrados{% endif %}</strong>
+                    </div>
+                </article>
+
+                <article class="profile-card">
+                    <h2>Metodos configurados</h2>
+                    <ul class="security-method-list">
+                        <li><span class="status-pill ok">Activo</span> OTP por correo</li>
+                        <li><span class="status-pill ok">Activo</span> Recovery Codes ({{ codigos_disponibles }} disponibles)</li>
+                        <li>
+                            <span class="status-pill {% if current_user.trxkey_hash %}ok{% else %}warn{% endif %}">
+                                {% if current_user.trxkey_hash %}Activo{% else %}Pendiente{% endif %}
+                            </span>
+                            Archivo Seguro de Acceso
+                        </li>
+                    </ul>
+                    <p class="auth-note compact">Codigos usados: {{ codigos_usados }}</p>
+                </article>
+
+                <article class="profile-card danger-card">
+                    <h2>Desactivar cuenta</h2>
+                    <p class="auth-note">Tu usuario no podra iniciar sesion. La informacion clinica no se elimina.</p>
+                    <form method="POST" action="{{ url_for('desactivar_cuenta') }}" class="auth-form profile-form">
+                        <label>
+                            Contrasena actual
+                            <input type="password" name="password" autocomplete="current-password" required>
+                        </label>
+                        <button type="submit" class="btn-secondary danger-button">Desactivar mi cuenta</button>
+                    </form>
+                </article>
+
+                <article class="profile-card danger-card">
+                    <h2>Eliminar cuenta definitivamente</h2>
+                    <p class="auth-note">Esta accion es irreversible.</p>
+
+                    {% if flujo_eliminacion == 'otp' %}
+                        <form method="POST" action="{{ url_for('eliminar_cuenta_verificar') }}" class="auth-form profile-form">
+                            <label>
+                                Codigo OTP
+                                <input type="text" name="codigo_otp" maxlength="6" autocomplete="one-time-code" required>
+                            </label>
+                            <button type="submit" class="btn-primary">Verificar OTP</button>
+                        </form>
+                    {% elif flujo_eliminacion == 'confirmar' %}
+                        <form method="POST" action="{{ url_for('eliminar_cuenta_confirmar') }}" class="auth-form profile-form">
+                            <label>
+                                Escribe ELIMINAR para confirmar
+                                <input type="text" name="confirmacion" autocomplete="off" required>
+                            </label>
+                            <button type="submit" class="btn-secondary danger-button">Eliminar cuenta definitivamente</button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('eliminar_cuenta_iniciar') }}" class="auth-form profile-form">
+                            <label>
+                                Contrasena actual
+                                <input type="password" name="password" autocomplete="current-password" required>
+                            </label>
+                            <button type="submit" class="btn-secondary danger-button">Continuar eliminacion</button>
+                        </form>
+                    {% endif %}
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

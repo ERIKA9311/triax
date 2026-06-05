@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIAX - Perfil de usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=perfil-1">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a class="logo" href="{{ url_for('home') }}">TRIAX<span>AI</span></a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('mostrar_modelo') }}">Modelo</a></li>
+                <li><a href="{{ url_for('seguridad') }}">Seguridad</a></li>
+                <li><a href="{{ url_for('logout') }}" class="btn-nav">Cerrar sesion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <section class="container profile-shell">
+            <div class="profile-heading">
+                <span class="eyebrow">Cuenta TRIAX</span>
+                <h1>Perfil de <span class="text-gradient">usuario</span></h1>
+                <p class="subtitulo">Administra tu informacion, metodos de seguridad y actividad reciente.</p>
+            </div>
+
+            {% include "partials/mensajes.html" %}
+
+            <div class="profile-tabs" role="tablist" aria-label="Secciones del perfil">
+                <button type="button" class="profile-tab {% if tab_activa == 'personal' %}active{% endif %}" data-profile-tab="personal">Informacion personal</button>
+                <button type="button" class="profile-tab {% if tab_activa == 'seguridad' %}active{% endif %}" data-profile-tab="seguridad">Seguridad</button>
+                <button type="button" class="profile-tab {% if tab_activa == 'actividad' %}active{% endif %}" data-profile-tab="actividad">Actividad</button>
+            </div>
+
+            <section class="profile-panel {% if tab_activa == 'personal' %}active{% endif %}" data-profile-panel="personal">
+                <div class="profile-card">
+                    <h2>Informacion personal</h2>
+                    <form method="POST" class="auth-form profile-form">
+                        <input type="hidden" name="accion" value="actualizar_personal">
+                        <label>
+                            Nombre
+                            <input type="text" name="nombre" value="{{ current_user.nombre }}" required>
+                        </label>
+                        <label>
+                            Usuario
+                            <input type="text" value="{{ current_user.usuario }}" disabled>
+                        </label>
+                        <label>
+                            Fecha de registro
+                            <input type="text" value="{{ current_user.fecha_creacion.strftime('%Y-%m-%d %H:%M') }}" disabled>
+                        </label>
+                        <button type="submit" class="btn-primary">Guardar cambios</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="profile-panel {% if tab_activa == 'seguridad' %}active{% endif %}" data-profile-panel="seguridad">
+                <div class="security-grid">
+                    <article class="profile-card">
+                        <h2>Verificacion por correo OTP</h2>
+                        <div class="security-meta">
+                            <p>Correo registrado</p>
+                            <strong>{{ current_user.correo }}</strong>
+                            <span class="status-pill {% if current_user.correo_verificado %}ok{% else %}warn{% endif %}">
+                                {% if current_user.correo_verificado %}Activado{% else %}Pendiente{% endif %}
+                            </span>
+                        </div>
+                        {% if current_user.otp_email_pendiente %}
+                            <p class="auth-note compact">Correo pendiente: {{ current_user.otp_email_pendiente }}</p>
+                        {% endif %}
+                        <form method="POST" class="auth-form profile-form">
+                            <input type="hidden" name="accion" value="actualizar_correo">
+                            <label>
+                                Actualizar correo
+                                <input type="email" name="correo" value="{{ current_user.correo }}" required>
+                            </label>
+                            <button type="submit" class="btn-secondary">Enviar OTP de verificacion</button>
+                        </form>
+                        <form method="POST" class="auth-form profile-form verify-form">
+                            <input type="hidden" name="accion" value="verificar_correo">
+                            <label>
+                                Codigo OTP
+                                <input type="text" name="codigo_otp" maxlength="6" placeholder="000000">
+                            </label>
+                            <button type="submit" class="btn-primary">Activar correo</button>
+                        </form>
+                    </article>
+
+                    <article class="profile-card">
+                        <h2>Codigos de recuperacion</h2>
+                        <div class="recovery-status inline">
+                            <p><strong>{{ codigos_disponibles }}</strong> disponibles</p>
+                            <p><strong>{{ codigos_usados }}</strong> usados</p>
+                        </div>
+                        <div class="profile-actions">
+                            <form method="POST" action="{{ url_for('perfil_regenerar_recovery_codes') }}">
+                                <button type="submit" class="btn-primary">Regenerar codigos</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('perfil_descargar_recovery_codes') }}">
+                                <button type="submit" class="btn-secondary">Descargar codigos</button>
+                            </form>
+                        </div>
+                    </article>
+
+                    <article class="profile-card">
+                        <h2>Archivo de identidad TRIAX</h2>
+                        <div class="security-meta">
+                            <p>Estado del archivo</p>
+                            <strong>{% if current_user.trxkey_hash %}Generado{% else %}No generado{% endif %}</strong>
+                            {% if current_user.trxkey_generado_en %}
+                                <span>Ultima generacion: {{ current_user.trxkey_generado_en.strftime('%Y-%m-%d %H:%M') }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="profile-actions">
+                            <form method="POST" action="{{ url_for('perfil_generar_trxkey') }}">
+                                <input type="hidden" name="accion" value="generar">
+                                <button type="submit" class="btn-primary">Generar archivo</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('perfil_generar_trxkey') }}">
+                                <input type="hidden" name="accion" value="descargar">
+                                <button type="submit" class="btn-secondary">Descargar archivo</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('perfil_generar_trxkey') }}">
+                                <input type="hidden" name="accion" value="reemplazar">
+                                <button type="submit" class="btn-secondary">Reemplazar archivo</button>
+                            </form>
+                        </div>
+                    </article>
+
+                    <article class="profile-card danger-card">
+                        <h2>Gestion de cuenta</h2>
+                        <p class="auth-note">
+                            Desde el centro de seguridad puedes desactivar tu cuenta o iniciar la eliminacion definitiva.
+                        </p>
+                        <div class="profile-actions">
+                            <a href="{{ url_for('seguridad') }}" class="btn-secondary danger-button">Desactivar mi cuenta</a>
+                            <a href="{{ url_for('seguridad', eliminar='password') }}" class="btn-secondary danger-button">Eliminar cuenta definitivamente</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="profile-panel {% if tab_activa == 'actividad' %}active{% endif %}" data-profile-panel="actividad">
+                <div class="profile-card">
+                    <h2>Actividad reciente</h2>
+                    <div class="activity-list">
+                        {% for actividad in actividades %}
+                            <article class="activity-item">
+                                <div>
+                                    <strong>{{ actividad.accion.replace('_', ' ')|title }}</strong>
+                                    {% if actividad.detalle %}<p>{{ actividad.detalle }}</p>{% endif %}
+                                </div>
+                                <time>{{ actividad.fecha.strftime('%Y-%m-%d %H:%M') }}</time>
+                            </article>
+                        {% else %}
+                            <p class="auth-note">Aun no hay eventos registrados para esta cuenta.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=perfil-1"></script>
+</body>
+</html>

@@ -315,10 +315,7 @@ def asegurar_esquema_seguridad():
 
 @app.before_request
 def crear_tablas():
-    if not app.config.get("_DB_READY"):
-        db.create_all()
-        asegurar_esquema_seguridad()
-        app.config["_DB_READY"] = True
+    pass
 
     if current_user.is_authenticated and not current_user.activo:
         session.clear()

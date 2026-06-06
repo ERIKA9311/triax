@@ -6,6 +6,7 @@ import json
 import os
 import random
 import secrets
+import socket
 import string
 
 from flask import (
@@ -74,12 +75,10 @@ app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
     "MAIL_DEFAULT_SENDER",
     app.config["MAIL_USERNAME"],
 )
+app.config["MAIL_TIMEOUT"] = int(os.getenv("MAIL_TIMEOUT", "10"))
 app.config["MAIL_SUPPRESS_SEND"] = os.getenv("MAIL_SUPPRESS_SEND", "false").lower() == "true"
 
 db.init_app(app)
-with app.app_context():
-    result = db.session.execute(text("SELECT DATABASE()"))
-    print("triax:", result.scalar())
 mail = Mail(app)
 
 login_manager = LoginManager()
@@ -214,7 +213,32 @@ def buscar_recovery_code_valido(usuario_id, codigo):
     return None
 
 
+def validar_configuracion_correo():
+    if app.config["MAIL_SUPPRESS_SEND"]:
+        return
+
+    faltantes = [
+        nombre
+        for nombre in ("MAIL_SERVER", "MAIL_USERNAME", "MAIL_PASSWORD", "MAIL_DEFAULT_SENDER")
+        if not app.config.get(nombre)
+    ]
+    if faltantes:
+        raise RuntimeError(
+            "Faltan variables de correo en Render: " + ", ".join(faltantes)
+        )
+
+
+def enviar_mensaje_correo(mensaje):
+    timeout_anterior = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(app.config["MAIL_TIMEOUT"])
+    try:
+        mail.send(mensaje)
+    finally:
+        socket.setdefaulttimeout(timeout_anterior)
+
+
 def enviar_codigo_otp(usuario):
+    validar_configuracion_correo()
     mensaje = Message(
         subject="Código de acceso TRIAX IA",
         recipients=[usuario.correo],
@@ -227,10 +251,11 @@ Su código de verificación es:
 
 Este código expirará en 5 minutos.
 """
-    mail.send(mensaje)
+    enviar_mensaje_correo(mensaje)
 
 
 def enviar_codigo_verificacion_correo(usuario, destino=None):
+    validar_configuracion_correo()
     destinatario = destino or usuario.correo
     mensaje = Message(
         subject="Verificacion de correo TRIAX IA",
@@ -244,7 +269,7 @@ Tu codigo de verificacion de correo es:
 
 Este codigo expirara en 5 minutos.
 """
-    mail.send(mensaje)
+    enviar_mensaje_correo(mensaje)
 
 
 def limpiar_otp(usuario):
@@ -269,6 +294,7 @@ def generar_token_restablecimiento(usuario):
 
 
 def enviar_enlace_restablecimiento(usuario, token):
+    validar_configuracion_correo()
     enlace = url_for("restablecer_password", token=token, _external=True)
     mensaje = Message(
         subject="Restablecer contrasena TRIAX IA",
@@ -283,7 +309,7 @@ Usa este enlace durante los proximos 30 minutos:
 
 Si no solicitaste este cambio, puedes ignorar este mensaje.
 """
-    mail.send(mensaje)
+    enviar_mensaje_correo(mensaje)
 
 
 def password_valida(password, confirmar_password):

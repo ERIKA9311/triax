@@ -74,6 +74,9 @@ app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
 app.config["MAIL_SUPPRESS_SEND"] = os.getenv("MAIL_SUPPRESS_SEND", "false").lower() == "true"
 
 db.init_app(app)
+with app.app_context():
+    result = db.session.execute(text("SELECT DATABASE()"))
+    print("triax:", result.scalar())
 mail = Mail(app)
 
 login_manager = LoginManager()

@@ -410,12 +410,8 @@ def registro():
                 )
                 db.session.add(nuevo_usuario)
                 db.session.commit()
-                codigos_recuperacion = crear_recovery_codes(nuevo_usuario.id)
-                return render_template(
-                    "recovery_codes.html",
-                    codigos=codigos_recuperacion,
-                    es_regeneracion=False,
-                )
+                flash("Registro exitoso. Inicia sesion para administrar tus codigos de recuperacion desde el perfil.", "success")
+                return redirect(url_for("login"))
 
     return render_template("registro.html")
 
